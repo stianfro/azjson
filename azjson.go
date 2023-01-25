@@ -1,3 +1,4 @@
+// Package azjson provides functions for doing http requests to APIs that use Azure for authentication
 package azjson
 
 import (
