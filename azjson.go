@@ -2,6 +2,7 @@
 package azjson
 
 import (
+	"bytes"
 	"context"
 	"io"
 	"net/http"
@@ -33,4 +34,28 @@ func Get(url string, token azcore.AccessToken) (json string, err error) {
 	}
 
 	return string(body), err
+}
+
+// Post sends a JSON payload to an api with authentication
+func Post(url string, payload []byte, token azcore.AccessToken, id string) error {
+	httpClient := &http.Client{}
+	bodyReader := bytes.NewReader(payload)
+
+	req, err := http.NewRequest(http.MethodPost, url, bodyReader)
+	if err != nil {
+		return err
+	}
+
+	req.Header.Add("Authorization", "Bearer "+token.Token)
+	req.Header.Add("Content-Type", "application/json")
+
+	res, err := httpClient.Do(req)
+	if err != nil {
+		return err
+	}
+	if res.StatusCode == http.StatusForbidden {
+		return err
+	}
+
+	return nil
 }
