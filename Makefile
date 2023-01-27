@@ -11,7 +11,7 @@ deps:
 	go mod vendor
 
 build:
-	go build -o bin/main main.go
+	go build -v ./...
 
 test:
 	gotestsum --format testname
